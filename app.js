@@ -34,10 +34,10 @@ app.post('/', (req, res) => {
   // Convert body to string if it's not already
   const input = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
 
-  const resultStatus = extractString(input, "status");
+  const resultStatus = findAllValuesByKey(input, 'status');
   console.log("result:", resultStatus);
 
-  const resultFrom = extractString(input, "from");
+  const resultFrom = findAllValuesByKey(input, 'from');
   console.log("resultFrom:", resultFrom);
 
   res.status(200).end();
@@ -69,3 +69,28 @@ function extractString(jsonString, searchKey) {
 
   return results;
 }
+
+
+
+
+
+// Recursive function to find all values for a given key
+function findAllValuesByKey(obj, targetKey, results = []) {
+  if (typeof obj !== 'object' || obj === null) return results;
+
+  if (Array.isArray(obj)) {
+    for (const item of obj) {
+      findAllValuesByKey(item, targetKey, results);
+    }
+  } else {
+    for (const key in obj) {
+      if (key === targetKey) {
+        results.push(obj[key]);
+      }
+      findAllValuesByKey(obj[key], targetKey, results);
+    }
+  }
+
+  return results;
+}
+
