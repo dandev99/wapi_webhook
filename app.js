@@ -35,16 +35,26 @@ app.post('/', (req, res) => {
  //const input = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
 
   const resultStatus = findAllValuesByKey(req.body, 'status');
-  console.log("result:", resultStatus);
+  const resultID = findAllValuesByKey(req.body, 'id');
 
-  const resultFrom = findAllValuesByKey(req.body, 'from');
-  console.log("resultFrom:", resultFrom);
+  
+  if(hasValue(resultStatus))
+  {
+  console.log("status update recieved");
+  console.log("resultStatus:", resultID);
+  console.log("resultStatus:", resultStatus);
+  const resultRecipient = findAllValuesByKey(req.body, 'recipient_id');
+  console.log("resultStatus:", resultRecipient);
+  }else {
+      console.log("inbound message recieved");
+      console.log("resultStatus:", resultID);
+      const resultFrom = findAllValuesByKey(req.body, 'from');
+      console.log("resultFrom:", resultFrom);
+      const resultBody = findAllValuesByKey(req.body, 'body');
+      console.log("resultFrom:", resultBody);
+  }
+  
 
-  const resultStatus2 = findAllValuesByKey(req.body, "status");
-  console.log("result:", resultStatus2);
-
-  const resultFrom2 = findAllValuesByKey(req.body, "from");
-  console.log("resultFrom:", resultFrom2);
 
   res.status(200).end();
 });
@@ -99,4 +109,11 @@ function findAllValuesByKey(obj, targetKey, results = []) {
 
   return results;
 }
+
+
+
+function hasValue(str) {
+  return typeof str === 'string' && str.trim() !== '';
+}
+
 
