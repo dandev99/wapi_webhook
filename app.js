@@ -32,13 +32,19 @@ app.post('/', (req, res) => {
   console.log(JSON.stringify(req.body, null, 2));
 
   // Convert body to string if it's not already
-  const input = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+ //const input = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
 
-  const resultStatus = findAllValuesByKey(input, 'status');
+  const resultStatus = findAllValuesByKey(req.body, 'status');
   console.log("result:", resultStatus);
 
-  const resultFrom = findAllValuesByKey(input, 'from');
+  const resultFrom = findAllValuesByKey(req.body, 'from');
   console.log("resultFrom:", resultFrom);
+
+  const resultStatus2 = findAllValuesByKey(req.body, "status");
+  console.log("result:", resultStatus2);
+
+  const resultFrom2 = findAllValuesByKey(req.body, "from");
+  console.log("resultFrom:", resultFrom2);
 
   res.status(200).end();
 });
