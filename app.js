@@ -32,10 +32,10 @@ app.post('/', (req, res) => {
       // Example usage:
       //const input = '{"id":1,"status":"ok"}{"id":2,"status":"fail"}{"id":3,"name":"test"}';
       const resultStatus = extractStatuses(req.body,"status");
-      console.log("resultStatus" = resultStatus); 
+      console.log("resultStatus:", resultStatus);
 
       const resultFrom = extractStatuses(req.body,"from");
-      console.log("resultFrom" = resultFrom); 
+      console.log("resultFrom:", resultFrom);
   
   res.status(200).end();
 });
