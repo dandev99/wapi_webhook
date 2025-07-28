@@ -13,7 +13,9 @@ const verifyToken = process.env.VERIFY_TOKEN;
 
 // Route for GET requests
 app.get('/', (req, res) => {
-  const { 'hub.mode': mode, 'hub.challenge': challenge, 'hub.verify_token': token } = req.query;
+  const mode = req.query['hub.mode'];
+  const challenge = req.query['hub.challenge'];
+  const token = req.query['hub.verify_token'];
 
   if (mode === 'subscribe' && token === verifyToken) {
     console.log('WEBHOOK VERIFIED');
@@ -29,51 +31,41 @@ app.post('/', (req, res) => {
   console.log(`\n\nWebhook received ${timestamp}\n`);
   console.log(JSON.stringify(req.body, null, 2));
 
-      // Example usage:
-      //const input = '{"id":1,"status":"ok"}{"id":2,"status":"fail"}{"id":3,"name":"test"}';
-      const resultStatus = extractStatuses(req.body,"status");
-      console.log("resultStatus:", resultStatus);
+  // Convert body to string if it's not already
+  const input = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
 
-      const resultFrom = extractStatuses(req.body,"from");
-      console.log("resultFrom:", resultFrom);
-  
+  const resultStatus = extractString(input, "status");
+  console.log("result:", resultStatus);
+
+  const resultFrom = extractString(input, "from");
+  console.log("resultFrom:", resultFrom);
+
   res.status(200).end();
 });
-
-
-
-
-
-
 
 // Start the server
 app.listen(port, () => {
   console.log(`\nListening on port ${port}\n`);
 });
 
-
-
-
-function extractString(jsonString,searckKey) {
-  const statuses = [];
+// Function to extract values by key from concatenated JSON objects
+function extractString(jsonString, searchKey) {
+  const results = [];
   const regex = /{[^{}]*}/g; // Matches individual JSON objects
 
   const matches = jsonString.match(regex);
-  if (!matches) return statuses;
+  if (!matches) return results;
 
   for (const match of matches) {
     try {
       const obj = JSON.parse(match);
-      if (searckKey in obj) {
-        statuses.push(obj.status);
+      if (searchKey in obj) {
+        results.push(obj[searchKey]);
       }
     } catch (e) {
       console.warn("Invalid JSON object skipped:", match);
     }
   }
 
-  return statuses;
+  return results;
 }
-
-
-
