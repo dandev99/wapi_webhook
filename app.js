@@ -28,10 +28,52 @@ app.post('/', (req, res) => {
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
   console.log(`\n\nWebhook received ${timestamp}\n`);
   console.log(JSON.stringify(req.body, null, 2));
+
+      // Example usage:
+      //const input = '{"id":1,"status":"ok"}{"id":2,"status":"fail"}{"id":3,"name":"test"}';
+      const resultStatus = extractStatuses(req.body,"status");
+      console.log("resultStatus" = resultStatus); 
+
+      const resultFrom = extractStatuses(req.body,"from");
+      console.log("resultFrom" = resultFrom); 
+  
   res.status(200).end();
 });
+
+
+
+
+
+
 
 // Start the server
 app.listen(port, () => {
   console.log(`\nListening on port ${port}\n`);
 });
+
+
+
+
+function extractString(jsonString,searckKey) {
+  const statuses = [];
+  const regex = /{[^{}]*}/g; // Matches individual JSON objects
+
+  const matches = jsonString.match(regex);
+  if (!matches) return statuses;
+
+  for (const match of matches) {
+    try {
+      const obj = JSON.parse(match);
+      if (searckKey in obj) {
+        statuses.push(obj.status);
+      }
+    } catch (e) {
+      console.warn("Invalid JSON object skipped:", match);
+    }
+  }
+
+  return statuses;
+}
+
+
+
