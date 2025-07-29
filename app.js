@@ -41,13 +41,13 @@ app.post('/', (req, res) => {
   if(hasValue(resultStatus))
   {
   console.log("status update recieved");
-  console.log("resultStatus:", resultID);
+  console.log("resultID:", resultID);
   console.log("resultStatus:", resultStatus);
   const resultRecipient = findAllValuesByKey(req.body, 'recipient_id');
   console.log("resultStatus:", resultRecipient);
   }else {
       console.log("inbound message recieved");
-      console.log("resultStatus:", resultID);
+      console.log("resultID:", resultID);
       const resultFrom = findAllValuesByKey(req.body, 'from');
       console.log("resultFrom:", resultFrom);
       const resultBody = findAllValuesByKey(req.body, 'body');
